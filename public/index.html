@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InScript Marathi Typing Tutor</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<base target="_blank">
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>InScript Marathi Typing Tutor</h1>
+    <p>Government Standard | GCC-TBC Exam Prep | 19 Progressive Lessons | Built-in Keyboard</p>
+  </div>
+  <div class="notice">
+    <strong>How it works:</strong> This tutor has a <strong>built-in InScript keyboard</strong>. Just press English keys (A-Z) and Marathi characters appear automatically. <strong>No need to install any InScript keyboard driver!</strong> Press the key shown on the virtual keyboard.
+    <br><br>
+    <strong>New:</strong> Lessons build muscle memory for fixed sequences. If you can fly through a lesson but blank out on a random word elsewhere, use the <strong>Random Letter Recall Drill</strong> below the lesson list &mdash; it shuffles every character fresh each time, so there's nothing to memorize except the real key.
+  </div>
+  <div class="stats-bar">
+    <div class="stat-card"><div class="stat-value" id="stat-wpm">0</div><div class="stat-label">WPM</div></div>
+    <div class="stat-card"><div class="stat-value" id="stat-cpm">0</div><div class="stat-label">CPM</div></div>
+    <div class="stat-card"><div class="stat-value" id="stat-accuracy">100%</div><div class="stat-label">Accuracy</div></div>
+    <div class="stat-card"><div class="stat-value" id="stat-errors">0</div><div class="stat-label">Errors</div></div>
+    <div class="stat-card"><div class="stat-value" id="stat-time">0:00</div><div class="stat-label">Time</div></div>
+  </div>
+  <div class="lesson-nav" id="lesson-nav"></div>
+
+  <div class="drill-panel">
+    <div class="drill-panel-title">🎯 Random Letter Recall Drill</div>
+    <div class="drill-panel-desc">
+      Tests real key&rarr;letter recall instead of a memorized pattern: every run is freshly shuffled from the whole InScript layout. Your per-letter accuracy is saved in this browser, so "Drill My Weak Letters" gets smarter the more you use it.
+    </div>
+    <div class="drill-panel-controls">
+      <label for="drill-length">Length:</label>
+      <select id="drill-length">
+        <option value="20">20 letters</option>
+        <option value="40" selected>40 letters</option>
+        <option value="60">60 letters</option>
+        <option value="100">100 letters</option>
+      </select>
+      <button class="btn btn-primary btn-small" onclick="startDrillMode('all')">Start Random Drill</button>
+      <button class="btn btn-secondary btn-small" onclick="startDrillMode('weak')">Drill My Weak Letters</button>
+    </div>
+  </div>
+
+  <div class="progress-container">
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+    <div class="progress-text" id="progress-text">Select a lesson to begin</div>
+  </div>
+  <div class="lesson-info" id="lesson-info">
+    <strong>Welcome!</strong> This tutor has 19 progressive lessons covering all InScript keys. Start with Lesson 1 and work your way up. Focus on accuracy first - speed comes with muscle memory.
+  </div>
+  <div class="results-panel" id="results-panel">
+    <div class="results-title">Lesson Complete!</div>
+    <div class="result-message" id="result-message"></div>
+    <div class="results-grid">
+      <div class="result-item"><div class="result-value" id="result-wpm">0</div><div class="result-label">WPM</div></div>
+      <div class="result-item"><div class="result-value" id="result-accuracy">0%</div><div class="result-label">Accuracy</div></div>
+      <div class="result-item"><div class="result-value" id="result-time">0:00</div><div class="result-label">Time</div></div>
+    </div>
+    <div class="drill-report" id="drill-report"></div>
+    <div class="controls">
+      <button class="btn btn-primary" id="btn-results-next" onclick="nextLesson()">Next Lesson</button>
+      <button class="btn btn-secondary" id="btn-results-again" onclick="restartLesson()">Practice Again</button>
+    </div>
+  </div>
+  <div class="practice-section" id="practice-section">
+    <div class="mode-indicator" id="mode-indicator">Current Mode: <span>Normal Keys</span> | Press Shift for shifted characters</div>
+    <div class="target-display" id="target-display">
+      <span style="color:#555;font-size:20px;">Select a lesson and click "Start Practice"...</span>
+    </div>
+    <div class="type-display" id="type-display" tabindex="0">
+      <span style="color:#555;font-size:20px;">Click here or press Start to focus...</span>
+    </div>
+  </div>
+  <div class="finger-guide" id="finger-guide">
+    <div class="hand-section">
+      <div class="hand-title">Left Hand</div>
+      <div class="fingers">
+        <div class="finger" data-finger="LP" id="f-LP">A</div>
+        <div class="finger" data-finger="LR" id="f-LR">S</div>
+        <div class="finger" data-finger="LM" id="f-LM">D</div>
+        <div class="finger" data-finger="LI" id="f-LI">F</div>
+      </div>
+    </div>
+    <div class="hand-section">
+      <div class="hand-title">Right Hand</div>
+      <div class="fingers">
+        <div class="finger" data-finger="RI" id="f-RI">J</div>
+        <div class="finger" data-finger="RM" id="f-RM">K</div>
+        <div class="finger" data-finger="RR" id="f-RR">L</div>
+        <div class="finger" data-finger="RP" id="f-RP">;</div>
+      </div>
+    </div>
+  </div>
+  <div class="keyboard-section">
+    <div class="keyboard-title">InScript Marathi Keyboard - Watch highlighted keys</div>
+    <div class="keyboard" id="keyboard"></div>
+  </div>
+  <div class="controls">
+    <button class="btn btn-primary" id="btn-start" onclick="startPractice()">Start Practice</button>
+    <button class="btn btn-secondary" onclick="toggleCheatSheet()">Cheat Sheet</button>
+    <button class="btn btn-secondary" onclick="toggleSettings()">Settings</button>
+    <button class="btn btn-secondary" onclick="resetAll()">Reset All</button>
+  </div>
+  <div class="settings-panel" id="settings-panel">
+    <div class="setting-row"><span class="setting-label">Sound Effects</span><div class="toggle" id="toggle-sound" onclick="toggleSetting('sound')"></div></div>
+    <div class="setting-row"><span class="setting-label">Show Finger Guide</span><div class="toggle active" id="toggle-fingers" onclick="toggleSetting('fingers')"></div></div>
+    <div class="setting-row"><span class="setting-label">Highlight Next Key</span><div class="toggle active" id="toggle-highlight" onclick="toggleSetting('highlight')"></div></div>
+    <div class="setting-row"><span class="setting-label">Require 100% Accuracy</span><div class="toggle active" id="toggle-strict" onclick="toggleSetting('strict')"></div></div>
+  </div>
+  <div class="cheat-sheet" id="cheat-sheet">
+    <div class="cheat-title">Complete InScript Key Reference</div>
+    <div class="cheat-grid" id="cheat-grid"></div>
+  </div>
+</div>
+<script src="keyboard-data.js"></script>
+<script src="lessons-data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

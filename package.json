@@ -1,0 +1,17 @@
+{
+  "name": "marathi-inscript",
+  "version": "1.0.0",
+  "description": "Marathi Inscript Typing App",
+  "scripts": {
+    "tauri": "tauri",
+    "dev": "tauri dev",
+    "build": "echo 'Static files - no build needed'",
+    "tauri-build": "tauri build"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "2.0.0"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "2.0.0"
+  }
+}
